@@ -41,8 +41,17 @@ button.primary {
   color: #fff;
 }
 
+button.secondary {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
 button.primary:hover {
   background: #1e293b;
+}
+
+button.secondary:hover {
+  background: #cbd5f5;
 }
 
 button:disabled {
@@ -98,6 +107,11 @@ textarea {
   }
 
   #save-note {
+    background: #1e293b;
+    color: #e2e8f0;
+  }
+
+  button.secondary {
     background: #1e293b;
     color: #e2e8f0;
   }

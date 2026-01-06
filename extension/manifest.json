@@ -8,7 +8,15 @@
     "default_title": "skpine"
   },
   "permissions": ["activeTab", "scripting", "storage", "tabs"],
+  "host_permissions": ["https://shopping.naver.com/*"],
   "background": {
     "service_worker": "background.js"
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://shopping.naver.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
 }

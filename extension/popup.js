@@ -1,6 +1,7 @@
 const statusEl = document.getElementById("status");
 const noteInput = document.getElementById("quick-note");
 const toggleButton = document.getElementById("toggle-focus");
+const analyzeButton = document.getElementById("analyze-product");
 const saveButton = document.getElementById("save-note");
 const allowedDomains = ["shopping.naver.com"];
 
@@ -24,11 +25,13 @@ function updateToggleState() {
     const tabUrl = tabs[0]?.url;
     if (!isAllowedUrl(tabUrl)) {
       toggleButton.disabled = true;
+      analyzeButton.disabled = true;
       setStatus("쇼핑몰 상세 페이지에서만 집중 모드를 사용할 수 있어요.");
       return;
     }
 
     toggleButton.disabled = false;
+    analyzeButton.disabled = false;
     setStatus("");
   });
 }
@@ -65,5 +68,34 @@ saveButton.addEventListener("click", () => {
   const note = noteInput.value.trim();
   chrome.storage.local.set({ skpineNote: note }, () => {
     setStatus(note ? "메모를 저장했습니다." : "메모를 비웠습니다.");
+  });
+});
+
+analyzeButton.addEventListener("click", () => {
+  setStatus("상품 정보를 가져오는 중...");
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const tabId = tabs[0]?.id;
+    if (!tabId) {
+      setStatus("탭을 찾을 수 없습니다.");
+      return;
+    }
+
+    chrome.tabs.sendMessage(tabId, { type: "collect-product" }, (response) => {
+      if (chrome.runtime.lastError || !response?.payload?.name) {
+        setStatus("상품 정보를 가져올 수 없습니다.");
+        return;
+      }
+
+      chrome.runtime.sendMessage(
+        { type: "analyze-product", payload: response.payload },
+        (analysisResponse) => {
+          if (analysisResponse?.status === "opened") {
+            setStatus("skupine.ai에서 최저가를 분석합니다.");
+          } else {
+            setStatus("분석 페이지를 열 수 없습니다.");
+          }
+        }
+      );
+    });
   });
 });

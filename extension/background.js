@@ -1,5 +1,6 @@
 const FOCUS_STYLE_ID = "skpine-focus-style";
 const ALLOWED_DOMAINS = ["shopping.naver.com"];
+const SKU_PINE_BASE_URL = "https://skupine.ai/search";
 
 function toggleFocusMode() {
   const style = document.getElementById(FOCUS_STYLE_ID);
@@ -67,6 +68,31 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           sendResponse({ status: result });
         }
       );
+    });
+    return true;
+  }
+
+  if (message?.type === "analyze-product") {
+    const payload = message?.payload;
+    if (!payload?.name) {
+      sendResponse({ status: "missing-data" });
+      return false;
+    }
+
+    const searchParams = new URLSearchParams();
+    searchParams.set("name", payload.name);
+    if (payload.price) {
+      searchParams.set("price", payload.price);
+    }
+    if (payload.images?.length) {
+      searchParams.set("images", payload.images.join(","));
+    }
+    if (payload.sourceUrl) {
+      searchParams.set("source", payload.sourceUrl);
+    }
+
+    chrome.tabs.create({ url: `${SKU_PINE_BASE_URL}?${searchParams.toString()}` }, () => {
+      sendResponse({ status: "opened" });
     });
     return true;
   }
