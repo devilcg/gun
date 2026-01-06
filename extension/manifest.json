@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "skpine",
+  "description": "skpine helper extension for quick page focus and notes.",
+  "version": "0.1.0",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "skpine"
+  },
+  "permissions": ["activeTab", "scripting", "storage", "tabs"],
+  "host_permissions": ["https://shopping.naver.com/*", "https://brand.naver.com/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://shopping.naver.com/*", "https://brand.naver.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

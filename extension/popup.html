@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>skpine</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="popup">
+      <header>
+        <h1>skpine</h1>
+        <p>네이버 쇼핑/브랜드 디테일 페이지에서 집중 모드를 켜고 끕니다.</p>
+      </header>
+      <button id="toggle-focus" class="primary">집중 모드 토글</button>
+      <button id="analyze-product" class="secondary">최저가 분석</button>
+      <section class="note">
+        <label for="quick-note">빠른 메모</label>
+        <textarea id="quick-note" rows="4" placeholder="짧은 메모를 남겨보세요."></textarea>
+        <button id="save-note">메모 저장</button>
+        <p id="status" class="status" aria-live="polite"></p>
+      </section>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>
